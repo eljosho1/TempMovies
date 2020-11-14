@@ -15,8 +15,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_title"
-        app:layout_constraintVertical_bias="0.335" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_title" />
 
     <TextView
         android:id="@+id/tv_title"
@@ -34,10 +33,43 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Release Data"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/bt_refresh"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_description" />
+
+    <Button
+        android:id="@+id/bt_refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="refresh"
+        android:text="Get top movie"
+        app:layout_constraintBottom_toTopOf="@+id/et_enterId"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_release_date" />
+
+    <Button
+        android:id="@+id/bt_searchId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="getById"
+        android:text="Get from ID"
+        app:layout_constraintBottom_toBottomOf="@+id/et_enterId"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/et_enterId"
+        app:layout_constraintTop_toTopOf="@+id/et_enterId" />
+
+    <EditText
+        android:id="@+id/et_enterId"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="enter id"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/bt_searchId"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bt_refresh" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

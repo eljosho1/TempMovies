@@ -32,7 +32,7 @@ public class TmdbRepository {
         return tmdbRepository;
     }
 
-    public LiveData<DiscoverRoot> getPopularMovies(){
+    public MutableLiveData<DiscoverRoot> getPopularMovies(){
         Log.d(TAG, "calling getPopularMovies");
         MutableLiveData<DiscoverRoot> root = new MutableLiveData<DiscoverRoot>();
         tmdbService.getPopularMovies(apiKey).enqueue(new Callback<DiscoverRoot>() {
@@ -55,5 +55,26 @@ public class TmdbRepository {
         return root;
     }
 
-    //TODO - implement getMovieById()
+    public MutableLiveData<Movie> getMovieById(String id){
+        Log.d(TAG, "calling getMovieById - " + id);
+        MutableLiveData<Movie> movie = new MutableLiveData<Movie>();
+        tmdbService.getMovie(id, apiKey).enqueue(new Callback<Movie>() {
+            @Override
+            public void onResponse(Call<Movie> call, Response<Movie> response) {
+                if (response.isSuccessful()){
+                    movie.setValue(response.body());
+                    Log.d(TAG, "response success");
+                } else {
+                    Log.e(TAG, response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Movie> call, Throwable t) {
+                movie.setValue(null);
+                Log.e(TAG, t.getMessage());
+            }
+        });
+        return movie;
+    }
 }
