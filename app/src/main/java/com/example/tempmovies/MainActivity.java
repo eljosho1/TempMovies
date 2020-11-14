@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.example.tempmovies.model.DiscoverRoot;
 import com.example.tempmovies.model.Movie;
 import com.example.tempmovies.viewmodels.MainActivityViewModel;
 
@@ -32,10 +33,11 @@ public class MainActivity extends AppCompatActivity {
         mReleaseTextView = findViewById(R.id.tv_release_date);
 
         MainActivityViewModel mainActivityViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
-        mainActivityViewModel.getPopularMoviesList().observe(this, new Observer<List<Movie>>() {
+        mainActivityViewModel.getPopularMoviesList().observe(this, new Observer<DiscoverRoot>() {
             @Override
-            public void onChanged(List<Movie> movies) {
-                if (movies != null){
+            public void onChanged(DiscoverRoot discoverRoot) {
+                if (discoverRoot != null){
+                    List<Movie> movies = discoverRoot.getResults();
                     Movie movie = movies.get(0);
                     mTitleTextView.setText(movie.getTitle());
                     mDescriptionTextView.setText(movie.getDescription());

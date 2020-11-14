@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.tempmovies.model.DiscoverRoot;
 import com.example.tempmovies.model.Movie;
 
 import java.util.ArrayList;
@@ -31,14 +32,14 @@ public class TmdbRepository {
         return tmdbRepository;
     }
 
-    public LiveData<List<Movie>> getPopularMovies(){
+    public LiveData<DiscoverRoot> getPopularMovies(){
         Log.d(TAG, "calling getPopularMovies");
-        MutableLiveData<List<Movie>> movies = new MutableLiveData<List<Movie>>();
-        tmdbService.getPopularMovies(apiKey).enqueue(new Callback<List<Movie>>() {
+        MutableLiveData<DiscoverRoot> root = new MutableLiveData<DiscoverRoot>();
+        tmdbService.getPopularMovies(apiKey).enqueue(new Callback<DiscoverRoot>() {
             @Override
-            public void onResponse(Call<List<Movie>> call, Response<List<Movie>> response) {
+            public void onResponse(Call<DiscoverRoot> call, Response<DiscoverRoot> response) {
                 if (response.isSuccessful()){
-                    movies.setValue(response.body());
+                    root.setValue(response.body());
                     Log.d(TAG, "response success");
                 } else {
                     Log.e(TAG, response.message());
@@ -46,12 +47,12 @@ public class TmdbRepository {
             }
 
             @Override
-            public void onFailure(Call<List<Movie>> call, Throwable t) {
-                movies.setValue(null);
+            public void onFailure(Call<DiscoverRoot> call, Throwable t) {
+                root.setValue(null);
                 Log.e(TAG, t.getMessage());
             }
         });
-        return movies;
+        return root;
     }
 
     //TODO - implement getMovieById()
