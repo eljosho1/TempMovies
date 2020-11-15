@@ -37,6 +37,11 @@ public class MainActivity extends AppCompatActivity {
         mReleaseTextView = findViewById(R.id.tv_release_date);
 
         mainActivityViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
+
+        subscribeUI();
+    }
+
+    public void subscribeUI(){
         mainActivityViewModel.getPopularMoviesList().observe(this, new Observer<DiscoverRoot>() {
             @Override
             public void onChanged(DiscoverRoot discoverRoot) {
@@ -52,16 +57,10 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     Log.e(TAG, "Movie list is null");
                 }
-
-
             }
         });
 
-    }
-
-    public void getById(View view){
-        EditText idEditText = findViewById(R.id.et_enterId);
-        mainActivityViewModel.getMovieById(idEditText.getText().toString()).observe(this, new Observer<Movie>() {
+        mainActivityViewModel.getMovieById().observe(this, new Observer<Movie>() {
             @Override
             public void onChanged(Movie movie) {
                 if (movie != null){
@@ -76,9 +75,14 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void getById(View view){
+        EditText idEditText = findViewById(R.id.et_enterId);
+        mainActivityViewModel.setMovieIdQuery(idEditText.getText().toString());
+    }
+
     public void refresh(View view){
         Log.d(TAG, "refreshing...");
-        mainActivityViewModel.refresh();
+        //mainActivityViewModel.refresh();
         Log.d(TAG, "refreshed...");
     }
 }

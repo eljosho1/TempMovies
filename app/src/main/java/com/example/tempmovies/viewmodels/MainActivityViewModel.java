@@ -3,9 +3,11 @@ package com.example.tempmovies.viewmodels;
 import android.app.Application;
 
 import androidx.annotation.NonNull;
+import androidx.arch.core.util.Function;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.example.tempmovies.BasicApp;
@@ -17,17 +19,28 @@ import java.util.List;
 
 public class MainActivityViewModel extends AndroidViewModel {
 
-    MutableLiveData<DiscoverRoot> popularMoviesRoot;
-    MutableLiveData<Movie> movieById;
-    // TODO - dependency injection for this repo?
-    // shold View be sending the repo to viewmodel?
+    LiveData<DiscoverRoot> popularMoviesRoot;
+    LiveData<Movie> movieById;
+    MutableLiveData<String> idLiveData = new MutableLiveData<>();
     TmdbRepository tmdbRepository;
 
     public MainActivityViewModel(@NonNull Application application) {
         super(application);
         //tmdbRepository = TmdbRepository.getInstance();
         tmdbRepository = ((BasicApp) application).getRepository();
+
         popularMoviesRoot = tmdbRepository.getPopularMovies();
+
+        //id query
+        movieById = Transformations.switchMap(
+                idLiveData,
+                (Function<String, LiveData<Movie>>)  query -> {
+                    if (!query.isEmpty()) {
+                        return tmdbRepository.getMovieById(query);
+                    } else {
+                        return getMovieById();
+                    }
+                });
     }
 
 
@@ -35,9 +48,12 @@ public class MainActivityViewModel extends AndroidViewModel {
         return popularMoviesRoot;
     }
 
-    public LiveData<Movie> getMovieById(String id){
-        movieById = tmdbRepository.getMovieById(id);
+    public LiveData<Movie> getMovieById(){
         return movieById;
+    }
+
+    public void setMovieIdQuery(String id){
+        idLiveData.setValue(id);
     }
 
     public void refresh(){
