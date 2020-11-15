@@ -1,6 +1,7 @@
 package com.example.tempmovies.viewmodels;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.arch.core.util.Function;
@@ -19,9 +20,11 @@ import java.util.List;
 
 public class MainActivityViewModel extends AndroidViewModel {
 
+    private static String TAG = "MainActivityViewModel";
     LiveData<DiscoverRoot> popularMoviesRoot;
     LiveData<Movie> movieById;
     MutableLiveData<String> idLiveData = new MutableLiveData<>();
+    MutableLiveData<Boolean> refreshTrigger = new MutableLiveData<>();
     TmdbRepository tmdbRepository;
 
     public MainActivityViewModel(@NonNull Application application) {
@@ -29,16 +32,27 @@ public class MainActivityViewModel extends AndroidViewModel {
         //tmdbRepository = TmdbRepository.getInstance();
         tmdbRepository = ((BasicApp) application).getRepository();
 
-        popularMoviesRoot = tmdbRepository.getPopularMovies();
+        //popularMoviesRoot = tmdbRepository.getPopularMovies();
+        //popular movies request with refresh
+        popularMoviesRoot = Transformations.switchMap(
+                refreshTrigger,
+                (Function<Boolean, LiveData<DiscoverRoot>>)  query -> {
+
+                    return tmdbRepository.getPopularMovies();
+                });
+        refresh();
 
         //id query
         movieById = Transformations.switchMap(
                 idLiveData,
                 (Function<String, LiveData<Movie>>)  query -> {
                     if (!query.isEmpty()) {
+                        Log.d(TAG, "query - query");
                         return tmdbRepository.getMovieById(query);
                     } else {
-                        return getMovieById();
+                        Log.d(TAG, "query is nothing");
+                        return tmdbRepository.getMovieById("10420");
+//                        return getMovieById();
                     }
                 });
     }
@@ -49,6 +63,7 @@ public class MainActivityViewModel extends AndroidViewModel {
     }
 
     public LiveData<Movie> getMovieById(){
+        Log.d(TAG, "movieById returning " + movieById);
         return movieById;
     }
 
@@ -57,6 +72,7 @@ public class MainActivityViewModel extends AndroidViewModel {
     }
 
     public void refresh(){
-        popularMoviesRoot = tmdbRepository.getPopularMovies();
+        //unsure if this is the right way to do it...
+        refreshTrigger.setValue(true);
     }
 }

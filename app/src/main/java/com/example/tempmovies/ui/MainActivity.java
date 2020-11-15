@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void subscribeUI(){
+        //todo updating both when the orientation changes
         mainActivityViewModel.getPopularMoviesList().observe(this, new Observer<DiscoverRoot>() {
             @Override
             public void onChanged(DiscoverRoot discoverRoot) {
@@ -82,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void refresh(View view){
         Log.d(TAG, "refreshing...");
-        //mainActivityViewModel.refresh();
+        mainActivityViewModel.refresh();
         Log.d(TAG, "refreshed...");
     }
 }
