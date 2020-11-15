@@ -12,7 +12,8 @@ import retrofit2.http.Query;
 
 public interface TmdbApi {
     @GET("discover/movie?sort_by=popularity.desc")
-    Call<DiscoverRoot> getPopularMovies(@Query("api_key") String apiKey);
+    Call<DiscoverRoot> getPopularMovies(@Query("api_key") String apiKey,
+                                        @Query("page") String page);
 
     @GET("movie/{id}")
     Call<Movie> getMovie(@Path("id") String movieID, @Query("api_key") String apiKey);

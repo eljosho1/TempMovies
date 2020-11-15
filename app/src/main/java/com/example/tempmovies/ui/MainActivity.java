@@ -1,4 +1,4 @@
-package com.example.tempmovies;
+package com.example.tempmovies.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.tempmovies.R;
 import com.example.tempmovies.model.DiscoverRoot;
 import com.example.tempmovies.model.Movie;
 import com.example.tempmovies.viewmodels.MainActivityViewModel;

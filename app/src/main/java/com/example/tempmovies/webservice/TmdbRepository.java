@@ -14,6 +14,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class TmdbRepository {
 
@@ -21,13 +22,18 @@ public class TmdbRepository {
     private static TmdbRepository tmdbRepository;
 
     //TODO - this instantiaites its own webservice. should use dependency injection instead
-    private TmdbApi tmdbService = TmdbServiceGenerator.createService(TmdbApi.class);
+    //private TmdbApi tmdbService = TmdbServiceGenerator.createService(TmdbApi.class);
+    private TmdbApi tmdbService;
 
     private static String apiKey = "58d008aa8bc2b7b6bcff70408b9f82cc";
 
-    public static TmdbRepository getInstance(){
+    private TmdbRepository(Retrofit retrofitRequest) {
+        this.tmdbService = retrofitRequest.create(TmdbApi.class);
+    }
+
+    public static TmdbRepository getInstance(Retrofit retrofitRequest){
         if (tmdbRepository == null){
-            tmdbRepository = new TmdbRepository();
+            tmdbRepository = new TmdbRepository(retrofitRequest);
         }
         return tmdbRepository;
     }
@@ -35,7 +41,7 @@ public class TmdbRepository {
     public MutableLiveData<DiscoverRoot> getPopularMovies(){
         Log.d(TAG, "calling getPopularMovies");
         MutableLiveData<DiscoverRoot> root = new MutableLiveData<DiscoverRoot>();
-        tmdbService.getPopularMovies(apiKey).enqueue(new Callback<DiscoverRoot>() {
+        tmdbService.getPopularMovies(apiKey, null).enqueue(new Callback<DiscoverRoot>() {
             @Override
             public void onResponse(Call<DiscoverRoot> call, Response<DiscoverRoot> response) {
                 if (response.isSuccessful()){
